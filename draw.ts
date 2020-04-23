@@ -54,16 +54,12 @@ function onKeyDown(e:KeyboardEvent) {
     }
 }
 
-
 function sPosition(e:TouchEvent) {
     painting = true;
     oldPoint = null;
     thisPoint = null;
     document.body.style.cursor = "crosshair";
     newPoint = [e.touches[0].clientX,e.touches[0].clientY];
-    if(charInput != null){
-        charInput.value = "start";
-    }
 }
 
 function startPosition(e:MouseEvent) {
@@ -92,7 +88,7 @@ function touchdraw(e:TouchEvent){
     } else if(painting){
 
         
-        ctx? ctx.lineWidth = 3 : console.log("ctx not found");
+        ctx? ctx.lineWidth = 6 : console.log("ctx not found");
         ctx? ctx.lineCap = "round" : console.log("ctx not found");
 
         oldPoint = thisPoint;
@@ -183,7 +179,3 @@ function saveImage() {
 
     }
 }
-
-// window.addEventListener('resize', () => {
-//     updateSize(canvas);   
-// })

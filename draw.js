@@ -52,9 +52,6 @@ function sPosition(e) {
     thisPoint = null;
     document.body.style.cursor = "crosshair";
     newPoint = [e.touches[0].clientX, e.touches[0].clientY];
-    if (charInput != null) {
-        charInput.value = "start";
-    }
 }
 function startPosition(e) {
     painting = true;
@@ -78,7 +75,7 @@ function touchdraw(e) {
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(e.touches[0].clientX - 15, e.touches[0].clientY - 15, 30, 30);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = 3 : console.log("ctx not found");
+        ctx ? ctx.lineWidth = 6 : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         oldPoint = thisPoint;
         thisPoint = newPoint;
@@ -157,6 +154,3 @@ function saveImage() {
         clearCanvas();
     }
 }
-// window.addEventListener('resize', () => {
-//     updateSize(canvas);   
-// })
