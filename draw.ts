@@ -13,10 +13,15 @@ let erasor = false;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', () => {
+
+    screen.orientation.lock('portrait');
     canvas = <HTMLCanvasElement>document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    
-    let el = document.getElementById("CharacterInput");
+    if(charInput!=null){
+        charInput.size = 30;
+    }
+   
+    let el = document.getElementById("characterInput");
     if(el instanceof HTMLInputElement){
         charInput = el;
     }

@@ -22,7 +22,7 @@ body {
     flex-direction: column;
 }
 
-#clearButton,#saveButton {
+#clearButton,#saveButton,#characterInput {
     /* display: flex;
     margin:auto; */
     font-size: 48px;

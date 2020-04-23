@@ -11,9 +11,13 @@ var erasor = false;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', function () {
+    screen.orientation.lock('portrait');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    var el = document.getElementById("CharacterInput");
+    if (charInput != null) {
+        charInput.size = 30;
+    }
+    var el = document.getElementById("characterInput");
     if (el instanceof HTMLInputElement) {
         charInput = el;
     }
