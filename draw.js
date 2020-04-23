@@ -14,9 +14,6 @@ window.addEventListener('load', function () {
     screen.orientation.lock('portrait');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    if (charInput != null) {
-        charInput.size = 30;
-    }
     var el = document.getElementById("characterInput");
     if (el instanceof HTMLInputElement) {
         charInput = el;
@@ -106,7 +103,7 @@ function draw(e) {
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(e.clientX - 15, e.clientY - 15, 30, 30);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = 3 : console.log("ctx not found");
+        ctx ? ctx.lineWidth = 6 : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         oldPoint = thisPoint;
         thisPoint = newPoint;
