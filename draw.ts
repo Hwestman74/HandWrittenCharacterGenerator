@@ -142,7 +142,7 @@ function draw(e:MouseEvent) {
 
 function updateSize (canvas:HTMLCanvasElement) {
     canvas.height = 0.5*window.innerHeight;
-    canvas.width = window.innerWidth;
+    canvas.width = 0.99*window.innerWidth;
     // canvas.height = 84;
     // canvas.width = 84;
     
