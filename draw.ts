@@ -145,10 +145,10 @@ function draw(e:MouseEvent) {
 }
 
 function updateSize (canvas:HTMLCanvasElement) {
-    // canvas.height = 0.5*window.innerHeight;
-    // canvas.width = 0.9*window.innerWidth;
-    canvas.height = 84;
-    canvas.width = 84;
+    canvas.height = 0.5*window.innerHeight;
+    canvas.width = 0.9*window.innerWidth;
+    // canvas.height = 84;
+    // canvas.width = 84;
     
 }
 

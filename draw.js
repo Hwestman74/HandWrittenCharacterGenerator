@@ -128,10 +128,10 @@ function draw(e) {
     }
 }
 function updateSize(canvas) {
-    // canvas.height = 0.5*window.innerHeight;
-    // canvas.width = 0.9*window.innerWidth;
-    canvas.height = 84;
-    canvas.width = 84;
+    canvas.height = 0.5 * window.innerHeight;
+    canvas.width = 0.9 * window.innerWidth;
+    // canvas.height = 84;
+    // canvas.width = 84;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
