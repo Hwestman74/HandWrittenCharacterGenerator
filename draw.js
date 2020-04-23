@@ -25,6 +25,9 @@ window.addEventListener('load', function () {
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishPosition);
     canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchstart', sPosition);
+    canvas.addEventListener('touchend', finishPosition);
+    canvas.addEventListener('touchmove', touchdraw);
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
@@ -43,6 +46,16 @@ function onKeyDown(e) {
         finishPosition();
     }
 }
+function sPosition(e) {
+    painting = true;
+    oldPoint = null;
+    thisPoint = null;
+    document.body.style.cursor = "crosshair";
+    newPoint = [e.touches[0].clientX, e.touches[0].clientY];
+    if (charInput != null) {
+        charInput.value = "start";
+    }
+}
 function startPosition(e) {
     painting = true;
     oldPoint = null;
@@ -56,6 +69,36 @@ function finishPosition() {
     oldPoint = null;
     thisPoint = null;
     newPoint = null;
+}
+function touchdraw(e) {
+    if (e != null) {
+        console.log(e.touches[0].clientX);
+    }
+    if (erasor) {
+        ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(e.touches[0].clientX - 15, e.touches[0].clientY - 15, 30, 30);
+    }
+    else if (painting) {
+        ctx ? ctx.lineWidth = 3 : console.log("ctx not found");
+        ctx ? ctx.lineCap = "round" : console.log("ctx not found");
+        oldPoint = thisPoint;
+        thisPoint = newPoint;
+        newPoint = [e.touches[0].clientX, e.touches[0].clientY];
+        if (oldPoint != null && thisPoint != null && newPoint != null) {
+            ctx === null || ctx === void 0 ? void 0 : ctx.moveTo(oldPoint[0], oldPoint[1]);
+            ctx === null || ctx === void 0 ? void 0 : ctx.quadraticCurveTo(thisPoint[0], thisPoint[1], newPoint[0], newPoint[1]);
+            ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
+            ctx === null || ctx === void 0 ? void 0 : ctx.beginPath();
+        }
+        else {
+            ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+            ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
+            ctx === null || ctx === void 0 ? void 0 : ctx.beginPath();
+            ctx === null || ctx === void 0 ? void 0 : ctx.moveTo(newPoint[0], newPoint[1]);
+        }
+    }
+    else {
+        return;
+    }
 }
 function draw(e) {
     if (erasor) {
