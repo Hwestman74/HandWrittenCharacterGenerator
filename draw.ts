@@ -31,6 +31,11 @@ window.addEventListener('load', () => {
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishPosition);
     canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('touchstart', sPosition);
+    canvas.addEventListener('touchend', finishPosition);
+    canvas.addEventListener('touchmove', touchdraw);
+
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
@@ -49,6 +54,15 @@ function onKeyDown(e:KeyboardEvent) {
     }
 }
 
+
+function sPosition(e:TouchEvent) {
+    painting = true;
+    oldPoint = null;
+    thisPoint = null;
+    document.body.style.cursor = "crosshair";
+    newPoint = [e.touches[0].clientX,e.touches[0].clientY];
+}
+
 function startPosition(e:MouseEvent) {
     painting = true;
     oldPoint = null;
@@ -63,6 +77,34 @@ function finishPosition() {
     oldPoint = null;
     thisPoint = null;
     newPoint = null;
+}
+
+function touchdraw(e:TouchEvent){
+    if (erasor){
+        ctx?.clearRect(e.touches[0].clientX-15,e.touches[0].clientY-15,30,30);
+    } else if(painting){
+        ctx? ctx.lineWidth = 3 : console.log("ctx not found");
+        ctx? ctx.lineCap = "round" : console.log("ctx not found");
+
+        oldPoint = thisPoint;
+        thisPoint = newPoint;
+        newPoint = [e.touches[0].clientX,e.touches[0].clientY];
+
+        if(oldPoint!=null && thisPoint!=null && newPoint!=null){
+            ctx?.moveTo(oldPoint[0],oldPoint[1]);
+            ctx?.quadraticCurveTo(thisPoint[0],thisPoint[1],newPoint[0],newPoint[1]);
+            ctx?.stroke();
+            ctx?.beginPath();
+        } else {
+            ctx?.lineTo(e.touches[0].clientX,e.touches[0].clientY);
+            ctx?.stroke();
+            ctx?.beginPath();
+            ctx?.moveTo(newPoint[0],newPoint[1]);
+        }
+    }
+    else {
+        return;
+    }
 }
 
 function draw(e:MouseEvent) {
