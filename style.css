@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    overscroll-behavior-y: contain;
+}
+
 #canvas {
     border:2px solid black;
     /* margin: auto; */
