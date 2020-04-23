@@ -184,6 +184,6 @@ function saveImage() {
     }
 }
 
-window.addEventListener('resize', () => {
-    updateSize(canvas);   
-})
+// window.addEventListener('resize', () => {
+//     updateSize(canvas);   
+// })
