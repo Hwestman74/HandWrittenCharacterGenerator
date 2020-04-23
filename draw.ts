@@ -14,7 +14,7 @@ window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', () => {
 
-    screen.orientation.lock('portrait');
+    // screen.orientation.lock('portrait');
     canvas = <HTMLCanvasElement>document.getElementById("canvas");
     ctx = canvas.getContext("2d");
    

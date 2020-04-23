@@ -1,8 +1,8 @@
-*{
+/* *{
     margin:0;
     padding:0;
     box-sizing: border-box;
-}
+} */
 
 html,
 body {
@@ -19,11 +19,12 @@ body {
 
 .Buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin: auto;
 }
 
 #clearButton,#saveButton,#characterInput {
     /* display: flex;
     margin:auto; */
-    font-size: 48px;
+    font-size: 32px;
 }

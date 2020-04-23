@@ -11,7 +11,7 @@ var erasor = false;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', function () {
-    screen.orientation.lock('portrait');
+    // screen.orientation.lock('portrait');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     var el = document.getElementById("characterInput");
