@@ -6,6 +6,8 @@ let ctx:CanvasRenderingContext2D|null;
 let oldPoint:number[]|null
 let thisPoint:number[]|null;
 let newPoint:number[]|null;
+const strokeWidth = 10;
+const erasorSize = 30;
 
 let painting = false;
 let erasor = false;
@@ -70,7 +72,7 @@ function startPosition(e:MouseEvent|TouchEvent) {
     document.body.style.cursor = "crosshair";
     let pos = getMousePos(e);
     newPoint = [pos.x,pos.y];
-    ctx? ctx.lineWidth = 8 : console.log("ctx not found");
+    ctx? ctx.lineWidth = strokeWidth : console.log("ctx not found");
     ctx? ctx.lineCap = "round" : console.log("ctx not found");
     ctx?.lineTo(pos.x,pos.y);
     ctx?.stroke();
@@ -89,9 +91,9 @@ function finishPosition() {
 function draw(e:MouseEvent|TouchEvent) {
     let pos = getMousePos(e);
     if (erasor){
-        ctx?.clearRect(pos.x-15,pos.y-15,30,30);
+        ctx?.clearRect(pos.x-erasorSize/2,pos.y-erasorSize/2,erasorSize,erasorSize);
     } else if(painting){
-        ctx? ctx.lineWidth = 8 : console.log("ctx not found");
+        ctx? ctx.lineWidth = strokeWidth : console.log("ctx not found");
         ctx? ctx.lineCap = "round" : console.log("ctx not found");
         ctx?.lineTo(pos.x,pos.y);
         ctx?.stroke();
@@ -144,9 +146,7 @@ function saveImage() {
         var MIME_TYPE = "image/png";
         var imgURL = canvas?.toDataURL(MIME_TYPE);
         var dlLink = document.createElement('a');
-        let max = 1000000;
-        let randInt = Math.floor(Math.random() * Math.floor(max));
-        let fileName = charName +"_"+ randInt.toString() +".png";
+        let fileName = charName +"_"+ randInt().toString() +".png";
         dlLink.download = fileName;
         dlLink.href = imgURL;
         dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
@@ -155,4 +155,8 @@ function saveImage() {
         document.body.removeChild(dlLink);
         clearCanvas();
     }
+}
+
+function randInt():number{
+    return Math.floor(Math.random() * Math.floor(1000000));
 }

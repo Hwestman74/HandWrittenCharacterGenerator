@@ -6,6 +6,8 @@ var ctx;
 var oldPoint;
 var thisPoint;
 var newPoint;
+var strokeWidth = 10;
+var erasorSize = 30;
 var painting = false;
 var erasor = false;
 var screenWidth;
@@ -60,7 +62,7 @@ function startPosition(e) {
     document.body.style.cursor = "crosshair";
     var pos = getMousePos(e);
     newPoint = [pos.x, pos.y];
-    ctx ? ctx.lineWidth = 8 : console.log("ctx not found");
+    ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
     ctx ? ctx.lineCap = "round" : console.log("ctx not found");
     ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
     ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
@@ -77,10 +79,10 @@ function finishPosition() {
 function draw(e) {
     var pos = getMousePos(e);
     if (erasor) {
-        ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(pos.x - 15, pos.y - 15, 30, 30);
+        ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(pos.x - erasorSize / 2, pos.y - erasorSize / 2, erasorSize, erasorSize);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = 8 : console.log("ctx not found");
+        ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
         ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
@@ -129,9 +131,7 @@ function saveImage() {
         var MIME_TYPE = "image/png";
         var imgURL = canvas === null || canvas === void 0 ? void 0 : canvas.toDataURL(MIME_TYPE);
         var dlLink = document.createElement('a');
-        var max = 1000000;
-        var randInt = Math.floor(Math.random() * Math.floor(max));
-        var fileName = charName + "_" + randInt.toString() + ".png";
+        var fileName = charName + "_" + randInt().toString() + ".png";
         dlLink.download = fileName;
         dlLink.href = imgURL;
         dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
@@ -140,4 +140,7 @@ function saveImage() {
         document.body.removeChild(dlLink);
         clearCanvas();
     }
+}
+function randInt() {
+    return Math.floor(Math.random() * Math.floor(1000000));
 }
