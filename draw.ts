@@ -1,3 +1,10 @@
+// BUGS
+// Scroll is not prevented on DuckDuckGo, 
+// Cannot just dot to get a dot on Firefox
+// This is useful for multiplication and
+// dots over i.
+
+
 let clearButton: HTMLButtonElement;
 let saveButton: HTMLButtonElement;
 let canvas:HTMLCanvasElement;
@@ -89,6 +96,8 @@ function finishPosition() {
 }
 
 function draw(e:MouseEvent|TouchEvent) {
+    e.preventDefault();
+    
     let pos = getMousePos(e);
     if (erasor){
         ctx?.clearRect(pos.x-erasorSize/2,pos.y-erasorSize/2,erasorSize,erasorSize);
