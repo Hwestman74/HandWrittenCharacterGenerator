@@ -65,6 +65,9 @@ function startPosition(e) {
     oldPoint = null;
     thisPoint = null;
     document.body.style.cursor = "crosshair";
+
+    
+
     var pos = getMousePos(e);
     newPoint = [pos.x, pos.y];
     ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
@@ -110,7 +113,7 @@ function resize() {
 }
 function updateSize(canvas) {
     canvas.height = 0.4 * screenHeight;
-    canvas.width = 0.3 * screenWidth;
+    canvas.width = 0.6 * screenWidth;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
