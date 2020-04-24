@@ -39,6 +39,8 @@ window.addEventListener('load', () => {
     saveButton.addEventListener('click', saveImage);
 });
 
+window.addEventListener('resize', resize);
+
 function onKeyDown(e:KeyboardEvent) {
     erasor = e.shiftKey;
     painting = e.ctrlKey;
@@ -91,6 +93,10 @@ function draw(e:MouseEvent|TouchEvent) {
     else {
         return;
     }
+}
+
+function resize (){
+    updateSize(canvas);
 }
 
 function updateSize (canvas:HTMLCanvasElement) {

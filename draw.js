@@ -33,6 +33,7 @@ window.addEventListener('load', function () {
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
 });
+window.addEventListener('resize', resize);
 function onKeyDown(e) {
     erasor = e.shiftKey;
     painting = e.ctrlKey;
@@ -83,6 +84,9 @@ function draw(e) {
     else {
         return;
     }
+}
+function resize() {
+    updateSize(canvas);
 }
 function updateSize(canvas) {
     canvas.height = 0.5 * window.innerHeight;
