@@ -12,6 +12,10 @@ body {
 #canvas {
     border:2px solid black;
     touch-action: none;
+    display: flex;
+    justify-content: center;
+    margin:auto;
+    margin-bottom: 10px;
 }
 
 .Buttons {
@@ -24,10 +28,15 @@ body {
     margin-left: 30%;
     margin-right: 30%;
     font-size: 24px;
+    margin-bottom: 5px;
+
 }
 
 h1 {
+    display: flex;
+    justify-content: center;
     margin:auto;
+    margin-bottom: 10px;
     font-size: 24px;
 }
 

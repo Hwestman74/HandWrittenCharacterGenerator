@@ -8,10 +8,15 @@ var thisPoint;
 var newPoint;
 var painting = false;
 var erasor = false;
+var screenWidth;
+var screenHeight;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
-window.addEventListener('load', function () {
+window.addEventListener('load', initializeApp);
+function initializeApp() {
     screen.orientation.lock('portrait');
+    screenHeight = window.innerHeight;
+    screenWidth = window.innerWidth;
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     var el = document.getElementById("characterInput");
@@ -32,7 +37,7 @@ window.addEventListener('load', function () {
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
-});
+}
 window.addEventListener('resize', resize);
 function onKeyDown(e) {
     erasor = e.shiftKey;
@@ -53,13 +58,14 @@ function startPosition(e) {
     oldPoint = null;
     thisPoint = null;
     document.body.style.cursor = "crosshair";
-    var rect = canvas.getBoundingClientRect();
-    if (e instanceof MouseEvent) {
-        newPoint = [e.clientX - rect.left, e.clientY - rect.top];
-    }
-    else if (e instanceof TouchEvent) {
-        newPoint = [e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top];
-    }
+    var pos = getMousePos(e);
+    newPoint = [pos.x, pos.y];
+    ctx ? ctx.lineWidth = 8 : console.log("ctx not found");
+    ctx ? ctx.lineCap = "round" : console.log("ctx not found");
+    ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
+    ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
+    ctx === null || ctx === void 0 ? void 0 : ctx.beginPath();
+    ctx === null || ctx === void 0 ? void 0 : ctx.moveTo(pos.x, pos.y);
 }
 function finishPosition() {
     painting = false;
@@ -74,7 +80,7 @@ function draw(e) {
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(pos.x - 15, pos.y - 15, 30, 30);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = 6 : console.log("ctx not found");
+        ctx ? ctx.lineWidth = 8 : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
         ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
@@ -89,8 +95,8 @@ function resize() {
     updateSize(canvas);
 }
 function updateSize(canvas) {
-    canvas.height = 0.5 * window.innerHeight;
-    canvas.width = window.innerWidth;
+    canvas.height = 0.5 * screenHeight;
+    canvas.width = 0.8 * screenWidth;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
