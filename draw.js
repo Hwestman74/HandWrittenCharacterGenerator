@@ -109,8 +109,8 @@ function resize() {
     updateSize(canvas);
 }
 function updateSize(canvas) {
-    canvas.height = 0.5 * screenHeight;
-    canvas.width = 0.8 * screenWidth;
+    canvas.height = 0.4 * screenHeight;
+    canvas.width = 0.3 * screenWidth;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
