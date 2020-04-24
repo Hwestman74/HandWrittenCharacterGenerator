@@ -65,9 +65,6 @@ function startPosition(e) {
     oldPoint = null;
     thisPoint = null;
     document.body.style.cursor = "crosshair";
-
-    
-
     var pos = getMousePos(e);
     newPoint = [pos.x, pos.y];
     ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
@@ -86,18 +83,18 @@ function finishPosition() {
 }
 function draw(e) {
     e.preventDefault();
-    let pos = getMousePos(e);
-
-    let force = 1;
+    var pos = getMousePos(e);
     if (e instanceof TouchEvent) {
-       force =e.touches[0].force;
+        console.log(e.touches[0].force);
     }
-    
+    if (e instanceof TrackEvent) {
+        console.log("Howdy");
+    }
     if (erasor) {
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(pos.x - erasorSize / 2, pos.y - erasorSize / 2, erasorSize, erasorSize);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = strokeWidth*force : console.log("ctx not found");
+        ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
         ctx === null || ctx === void 0 ? void 0 : ctx.stroke();
@@ -112,8 +109,8 @@ function resize() {
     updateSize(canvas);
 }
 function updateSize(canvas) {
-    canvas.height = 0.4 * screenHeight;
-    canvas.width = 0.6 * screenWidth;
+    canvas.height = 0.5 * screenHeight;
+    canvas.width = 0.8 * screenWidth;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
