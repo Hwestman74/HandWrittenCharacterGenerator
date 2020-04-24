@@ -83,12 +83,18 @@ function finishPosition() {
 }
 function draw(e) {
     e.preventDefault();
-    var pos = getMousePos(e);
+    let pos = getMousePos(e);
+
+    let force = 1;
+    if (e instanceof TouchEvent) {
+       force =e.touches[0].force;
+    }
+    
     if (erasor) {
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(pos.x - erasorSize / 2, pos.y - erasorSize / 2, erasorSize, erasorSize);
     }
     else if (painting) {
-        ctx ? ctx.lineWidth = strokeWidth : console.log("ctx not found");
+        ctx ? ctx.lineWidth = strokeWidth*force : console.log("ctx not found");
         ctx ? ctx.lineCap = "round" : console.log("ctx not found");
         ctx === null || ctx === void 0 ? void 0 : ctx.lineTo(pos.x, pos.y);
         ctx === null || ctx === void 0 ? void 0 : ctx.stroke();

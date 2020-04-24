@@ -97,8 +97,18 @@ function finishPosition() {
 
 function draw(e:MouseEvent|TouchEvent) {
     e.preventDefault();
+
     
     let pos = getMousePos(e);
+
+    if(e instanceof TouchEvent){
+        console.log (e.touches[0].force);
+    }
+
+    if(e instanceof TrackEvent){
+        console.log ("Howdy");
+    }
+
     if (erasor){
         ctx?.clearRect(pos.x-erasorSize/2,pos.y-erasorSize/2,erasorSize,erasorSize);
     } else if(painting){
