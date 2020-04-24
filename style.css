@@ -12,14 +12,15 @@ body {
 #canvas {
     border:2px solid black;
     touch-action: none;
-    /* margin: auto; */
+    /* display: flex;
+    margin: auto; */
     /* margin-left: 50%;
     margin-right: 50%; */
 }
 
 .Buttons {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: auto;
 }
 

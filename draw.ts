@@ -3,7 +3,7 @@ let saveButton: HTMLButtonElement;
 let canvas:HTMLCanvasElement;
 let charInput: HTMLInputElement|null;
 let ctx:CanvasRenderingContext2D|null;
-
+// screen.orientation.lock('portrait');
 let oldPoint:number[]|null
 let thisPoint:number[]|null;
 let newPoint:number[]|null;
@@ -14,7 +14,7 @@ window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', () => {
 
-    // screen.orientation.lock('portrait');
+    
     canvas = <HTMLCanvasElement>document.getElementById("canvas");
     ctx = canvas.getContext("2d");
    
