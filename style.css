@@ -27,11 +27,11 @@ body {
 }
 
 h1 {
-    margin-left: 30%;
-    margin-right: 0%;
+    margin:auto;
     font-size: 24px;
 }
 
 #characterInput {
     font-size: 24px;
+    margin:auto;
 }
