@@ -3,21 +3,19 @@ let saveButton: HTMLButtonElement;
 let canvas:HTMLCanvasElement;
 let charInput: HTMLInputElement|null;
 let ctx:CanvasRenderingContext2D|null;
-// screen.orientation.lock('portrait');
 let oldPoint:number[]|null
 let thisPoint:number[]|null;
 let newPoint:number[]|null;
 
 let painting = false;
 let erasor = false;
+
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', () => {
-
-    
+    screen.orientation.lock('portrait');
     canvas = <HTMLCanvasElement>document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-   
     let el = document.getElementById("characterInput");
     if(el instanceof HTMLInputElement){
         charInput = el;
@@ -33,11 +31,9 @@ window.addEventListener('load', () => {
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishPosition);
     canvas.addEventListener('mousemove', draw);
-
-    canvas.addEventListener('touchstart', sPosition);
+    canvas.addEventListener('touchstart', startPosition);
     canvas.addEventListener('touchend', finishPosition);
-    canvas.addEventListener('touchmove', touchdraw);
-
+    canvas.addEventListener('touchmove', draw);
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
@@ -56,20 +52,18 @@ function onKeyDown(e:KeyboardEvent) {
     }
 }
 
-function sPosition(e:TouchEvent) {
+function startPosition(e:MouseEvent|TouchEvent) {
     painting = true;
     oldPoint = null;
     thisPoint = null;
     document.body.style.cursor = "crosshair";
-    newPoint = [e.touches[0].clientX,e.touches[0].clientY];
-}
+    let rect = canvas.getBoundingClientRect();
 
-function startPosition(e:MouseEvent) {
-    painting = true;
-    oldPoint = null;
-    thisPoint = null;
-    document.body.style.cursor = "crosshair";
-    newPoint = [e.clientX,e.clientY];
+    if(e instanceof MouseEvent) {
+        newPoint = [e.clientX - rect.left,e.clientY - rect.top];
+    } else  if(e instanceof TouchEvent) {
+        newPoint = [e.touches[0].clientX - rect.left,e.touches[0].clientY - rect.top];
+    }
 }
 
 function finishPosition() {
@@ -80,62 +74,19 @@ function finishPosition() {
     newPoint = null;
 }
 
-function touchdraw(e:TouchEvent){
-    
-    if(e != null){
-        console.log(e.touches[0].clientX);
-    }
+function draw(e:MouseEvent|TouchEvent) {
+    let pos = getMousePos(e);
+
     if (erasor){
-        ctx?.clearRect(e.touches[0].clientX-15,e.touches[0].clientY-15,30,30);
-    } else if(painting){
-
-        
-        ctx? ctx.lineWidth = 6 : console.log("ctx not found");
-        ctx? ctx.lineCap = "round" : console.log("ctx not found");
-
-        oldPoint = thisPoint;
-        thisPoint = newPoint;
-        newPoint = [e.touches[0].clientX,e.touches[0].clientY];
-
-        if(oldPoint!=null && thisPoint!=null && newPoint!=null){
-            ctx?.moveTo(oldPoint[0],oldPoint[1]);
-            ctx?.quadraticCurveTo(thisPoint[0],thisPoint[1],newPoint[0],newPoint[1]);
-            ctx?.stroke();
-            ctx?.beginPath();
-        } else {
-            ctx?.lineTo(e.touches[0].clientX,e.touches[0].clientY);
-            ctx?.stroke();
-            ctx?.beginPath();
-            ctx?.moveTo(newPoint[0],newPoint[1]);
-        }
-    }
-    else {
-        return;
-    }
-}
-
-function draw(e:MouseEvent) {
-    if (erasor){
-        ctx?.clearRect(e.clientX-15,e.clientY-15,30,30);
+        ctx?.clearRect(pos.x-15,pos.y-15,30,30);
     } else if(painting){
         ctx? ctx.lineWidth = 6 : console.log("ctx not found");
         ctx? ctx.lineCap = "round" : console.log("ctx not found");
 
-        oldPoint = thisPoint;
-        thisPoint = newPoint;
-        newPoint = [e.clientX,e.clientY];
-
-        if(oldPoint!=null && thisPoint!=null && newPoint!=null){
-            ctx?.moveTo(oldPoint[0],oldPoint[1]);
-            ctx?.quadraticCurveTo(thisPoint[0],thisPoint[1],newPoint[0],newPoint[1]);
-            ctx?.stroke();
-            ctx?.beginPath();
-        } else {
-            ctx?.lineTo(e.clientX,e.clientY);
-            ctx?.stroke();
-            ctx?.beginPath();
-            ctx?.moveTo(newPoint[0],newPoint[1]);
-        }
+        ctx?.lineTo(pos.x,pos.y);
+        ctx?.stroke();
+        ctx?.beginPath();
+        ctx?.moveTo(pos.x,pos.y);
     }
     else {
         return;
@@ -143,41 +94,51 @@ function draw(e:MouseEvent) {
 }
 
 function updateSize (canvas:HTMLCanvasElement) {
-    canvas.height = 0.5*window.innerHeight;
+    canvas.height =0.5* window.innerHeight;
     canvas.width = window.innerWidth;
-    // canvas.height = 84;
-    // canvas.width = 84;
-    
 }
 
 function clearCanvas() {
     ctx?.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function saveImage() {
+function getMousePos(e:MouseEvent|TouchEvent) {
+    var rect = canvas.getBoundingClientRect();
+    if(e instanceof MouseEvent){
+        return {
+            x: (e.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+            y: (e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+        };
+    }
+    else if(e instanceof TouchEvent) {
+        return {
+            x: (e.touches[0].clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+            y: (e.touches[0].clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+        };
+    }
+    return {
+        x:0,
+        y:0
+    }
+}
 
+function saveImage() {
     let charName = charInput?.value;
     if(charName==""){
         window.alert("Invalid character name!")
     } else {
         var MIME_TYPE = "image/png";
-
         var imgURL = canvas?.toDataURL(MIME_TYPE);
-    
         var dlLink = document.createElement('a');
         let max = 1000000;
         let randInt = Math.floor(Math.random() * Math.floor(max));
         let fileName = charName +"_"+ randInt.toString() +".png";
-        
         dlLink.download = fileName;
         dlLink.href = imgURL;
         dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-    
         document.body.appendChild(dlLink);
         dlLink.click();
         document.body.removeChild(dlLink);
-
         clearCanvas();
-
     }
 }
