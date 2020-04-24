@@ -16,6 +16,7 @@ body {
     justify-content: center;
     margin:auto;
     margin-bottom: 10px;
+    background-color: white;
 }
 
 .Buttons {
@@ -29,7 +30,12 @@ body {
     margin-right: 30%;
     font-size: 24px;
     margin-bottom: 5px;
+    background-color: aliceblue;
 
+}
+
+body{
+    background-color: rgb(200, 217, 223);
 }
 
 h1 {
@@ -43,4 +49,5 @@ h1 {
 #characterInput {
     font-size: 24px;
     margin:auto;
+    background-color: rgba(235, 184, 184,0.6);
 }
