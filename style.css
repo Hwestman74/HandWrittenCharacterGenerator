@@ -1,12 +1,5 @@
-/* *{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-} */
-
 html,
 body {
-    /* overscroll-behavior-y: contain; */
     background-color: rgb(200, 217, 223);
     overflow: hidden;
 }
@@ -35,7 +28,6 @@ body {
     margin-bottom: 5px;
     background-color: aliceblue;
     border-radius: 6px;
-
 }
 
 h1 {

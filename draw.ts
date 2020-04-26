@@ -4,11 +4,10 @@
 // This is useful for multiplication and
 // dots over i.
 
-
 let clearButton: HTMLButtonElement;
 let saveButton: HTMLButtonElement;
 let canvas:HTMLCanvasElement;
-let charInput: HTMLInputElement|null;
+let charInput: HTMLInputElement;
 let ctx:CanvasRenderingContext2D|null;
 let oldPoint:number[]|null
 let thisPoint:number[]|null;
@@ -16,7 +15,7 @@ let newPoint:number[]|null;
 const strokeWidth = 10;
 const erasorSize = 30;
 
-let painting = false;
+let painting:boolean = false;
 let erasor = false;
 
 let screenWidth:number;
@@ -96,18 +95,7 @@ function finishPosition() {
 }
 
 function draw(e:MouseEvent|TouchEvent) {
-    e.preventDefault();
-
-    
     let pos = getMousePos(e);
-
-    if(e instanceof TouchEvent){
-        console.log (e.touches[0].force);
-    }
-
-    if(e instanceof TrackEvent){
-        console.log ("Howdy");
-    }
 
     if (erasor){
         ctx?.clearRect(pos.x-erasorSize/2,pos.y-erasorSize/2,erasorSize,erasorSize);
