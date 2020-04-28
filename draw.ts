@@ -119,8 +119,8 @@ function resize (){
 }
 
 function updateSize (canvas:HTMLCanvasElement) {
-    canvas.width = 280;
-    canvas.height = 280;
+    canvas.width = 224;
+    canvas.height = 224;
 }
 
 function clearCanvas() {
@@ -180,7 +180,7 @@ function pixelizeImage(){
      
         img.src = canvas.toDataURL(MIME_TYPE);
         let pixelArray = ctx.getImageData(0,0,w,h).data;
-        let sampleSize = 10;
+        let sampleSize = 8;
         ctx.clearRect(0,0,canvas.width,canvas.height);
         
         for(let y=0;y<h;y+=sampleSize) {

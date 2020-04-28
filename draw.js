@@ -107,8 +107,8 @@ function resize() {
     updateSize(canvas);
 }
 function updateSize(canvas) {
-    canvas.width = 280;
-    canvas.height = 280;
+    canvas.width = 224;
+    canvas.height = 224;
 }
 function clearCanvas() {
     ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -160,7 +160,7 @@ function pixelizeImage() {
         var img = new Image();
         img.src = canvas.toDataURL(MIME_TYPE);
         var pixelArray = ctx.getImageData(0, 0, w, h).data;
-        var sampleSize = 10;
+        var sampleSize = 8;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var y = 0; y < h; y += sampleSize) {
             for (var x = 0; x < w; x += sampleSize) {
