@@ -6,6 +6,8 @@
 
 let clearButton: HTMLButtonElement;
 let saveButton: HTMLButtonElement;
+let pixelizeButton: HTMLButtonElement;
+let MIME_TYPE = "image/png";
 let canvas:HTMLCanvasElement;
 let charInput: HTMLInputElement;
 let ctx:CanvasRenderingContext2D|null;
@@ -26,10 +28,9 @@ window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', initializeApp);
 
 function initializeApp(){
-    screen.orientation.lock('portrait');
+    // screen.orientation.lock('portrait');
     screenHeight = window.innerHeight;
     screenWidth = window.innerWidth;
-
     canvas = <HTMLCanvasElement>document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     let el = document.getElementById("characterInput");
@@ -39,6 +40,7 @@ function initializeApp(){
 
     clearButton = <HTMLButtonElement>document.getElementById("clearButton");
     saveButton = <HTMLButtonElement>document.getElementById("saveButton");
+    pixelizeButton = <HTMLButtonElement>document.getElementById("pixelizeButton");
 
     //Resizing
     updateSize(canvas);
@@ -53,8 +55,8 @@ function initializeApp(){
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
+    pixelizeButton.addEventListener('click', pixelizeImage);
 }
-
 
 window.addEventListener('resize', resize);
 
@@ -117,8 +119,8 @@ function resize (){
 }
 
 function updateSize (canvas:HTMLCanvasElement) {
-    canvas.height =0.5* screenHeight
-    canvas.width = 0.8*screenWidth;
+    canvas.width = 280;
+    canvas.height = 280;
 }
 
 function clearCanvas() {
@@ -150,9 +152,9 @@ function saveImage() {
     if(charName==""){
         window.alert("Invalid character name!")
     } else {
-        var MIME_TYPE = "image/png";
-        var imgURL = canvas?.toDataURL(MIME_TYPE);
-        var dlLink = document.createElement('a');
+        let imgURL = canvas?.toDataURL(MIME_TYPE);
+        
+        let dlLink = document.createElement('a');
         let fileName = charName +"_"+ randInt().toString() +".png";
         dlLink.download = fileName;
         dlLink.href = imgURL;
@@ -166,4 +168,47 @@ function saveImage() {
 
 function randInt():number{
     return Math.floor(Math.random() * Math.floor(1000000));
+}
+
+
+
+function pixelizeImage(){
+    if(ctx) {
+        let w= canvas.width;
+        let h= canvas.height;
+        let img = new Image();
+     
+        img.src = canvas.toDataURL(MIME_TYPE);
+        let pixelArray = ctx.getImageData(0,0,w,h).data;
+        let sampleSize = 10;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        
+        for(let y=0;y<h;y+=sampleSize) {
+            for(let x=0;x<w;x+=sampleSize) {
+                let c = cellAverage(pixelArray, x,y,w,sampleSize)/150;
+                ctx.fillStyle = ("rgba(" + 0 + "," + 0 + ","+ 0 + ","+ c + ")");
+                ctx.fillRect(x,y,sampleSize,sampleSize);
+            }
+        }
+    }
+
+    function cellAverage(arr:Int8Array,x1:number,y1:number,w:number,sampleSize:number):number {
+        let x2 = x1+sampleSize;
+        let y2 = y1+sampleSize;
+        let average = 0;
+        for(let y=y1;y<y2;y++){
+            for(let x=x1;x<x2;x++){
+                let p = getPixel(x,y,w);
+                average += arr[p];
+            }
+        }
+
+        average/=sampleSize*sampleSize;
+        return average;
+    }
+
+    function getPixel(x:number,y:number,w:number) :number {
+        return (x + y * w)*4+3;
+    } 
+
 }

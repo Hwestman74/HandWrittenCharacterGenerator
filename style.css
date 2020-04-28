@@ -21,7 +21,7 @@ body {
     margin: auto;
 }
 
-#clearButton,#saveButton {
+#clearButton,#saveButton,#pixelizeButton {
     margin-left: 30%;
     margin-right: 30%;
     font-size: 24px;
