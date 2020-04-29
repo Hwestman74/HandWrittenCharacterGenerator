@@ -9,6 +9,8 @@ var saveButton;
 var pixelizeButton;
 var MIME_TYPE = "image/png";
 var canvas;
+var h1;
+var buttonDiv;
 var charInput;
 var ctx;
 var oldPoint;
@@ -16,6 +18,8 @@ var thisPoint;
 var newPoint;
 var strokeWidth = 10;
 var erasorSize = 30;
+var pixArrays = [];
+var clearOnTouch = false;
 var painting = false;
 var erasor = false;
 var screenWidth;
@@ -23,19 +27,52 @@ var screenHeight;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', initializeApp);
-function initializeApp() {
-    // screen.orientation.lock('portrait');
-    screenHeight = window.innerHeight;
-    screenWidth = window.innerWidth;
-    canvas = document.getElementById("canvas");
+function createCanvasPage() {
+    h1 = document.createElement('h1');
+    canvas = document.createElement('canvas');
+    canvas.id = "canvas";
     ctx = canvas.getContext("2d");
     var el = document.getElementById("characterInput");
     if (el instanceof HTMLInputElement) {
         charInput = el;
     }
-    clearButton = document.getElementById("clearButton");
-    saveButton = document.getElementById("saveButton");
-    pixelizeButton = document.getElementById("pixelizeButton");
+    buttonDiv = document.createElement('div');
+    buttonDiv.className = "Buttons";
+    clearButton = document.createElement('button');
+    clearButton.id = "clearButton";
+    clearButton.innerHTML = "Clear Canvas";
+    pixelizeButton = document.createElement('button');
+    pixelizeButton.innerHTML = "Add Sample";
+    pixelizeButton.id = "pixelizeButton";
+    saveButton = document.createElement('button');
+    saveButton.innerHTML = "Download Set";
+    saveButton.id = "saveButton";
+    charInput = document.createElement('input');
+    charInput.id = "characterInput";
+    charInput.placeholder = "Enter character name...";
+    charInput.type = "text";
+    charInput.value = "";
+    buttonDiv.appendChild(clearButton);
+    buttonDiv.appendChild(pixelizeButton);
+    buttonDiv.appendChild(saveButton);
+    buttonDiv.appendChild(charInput);
+    document.body.appendChild(h1);
+    document.body.appendChild(canvas);
+    document.body.appendChild(buttonDiv);
+}
+function initializeApp() {
+    screenHeight = window.innerHeight;
+    screenWidth = window.innerWidth;
+    createCanvasPage();
+    // canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    // ctx = canvas.getContext("2d");
+    // let el = document.getElementById("characterInput");
+    // if(el instanceof HTMLInputElement){
+    //     charInput = el;
+    // }
+    // clearButton = <HTMLButtonElement>document.getElementById("clearButton");
+    // saveButton = <HTMLButtonElement>document.getElementById("saveButton");
+    // pixelizeButton = <HTMLButtonElement>document.getElementById("pixelizeButton");
     //Resizing
     updateSize(canvas);
     //Eventlisteners
@@ -48,9 +85,16 @@ function initializeApp() {
     canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
-    pixelizeButton.addEventListener('click', pixelizeImage);
+    pixelizeButton.addEventListener('click', addSample);
+    charInput.addEventListener('change', onChangeChar);
 }
 window.addEventListener('resize', resize);
+function onChangeChar() {
+    pixArrays = [];
+    sampleCount = 0;
+    pixelizeButton.innerHTML = "Add Sample:   " + sampleCount;
+    clearCanvas();
+}
 function onKeyDown(e) {
     erasor = e.shiftKey;
     painting = e.ctrlKey;
@@ -66,6 +110,10 @@ function onKeyDown(e) {
     }
 }
 function startPosition(e) {
+    if (clearOnTouch) {
+        clearCanvas();
+        clearOnTouch = false;
+    }
     painting = true;
     oldPoint = null;
     thisPoint = null;
@@ -138,23 +186,26 @@ function saveImage() {
         window.alert("Invalid character name!");
     }
     else {
-        var imgURL = canvas === null || canvas === void 0 ? void 0 : canvas.toDataURL(MIME_TYPE);
-        var dlLink = document.createElement('a');
-        var fileName = charName + "_" + randInt().toString() + ".png";
-        dlLink.download = fileName;
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
-        clearCanvas();
+        var json = JSON.stringify(pixArrays[0]);
+        var blob = new Blob([json], { type: "text/plain;charset=utf-8" });
+        var url = window.URL || window.webkitURL;
+        var link = url.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.download = charName + ".json";
+        a.href = link;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        sampleCount = 0;
+        pixArrays = [];
     }
 }
 function randInt() {
     return Math.floor(Math.random() * Math.floor(1000000));
 }
-function pixelizeImage() {
-    if (ctx) {
+var sampleCount = 0;
+function addSample() {
+    if (ctx && !clearOnTouch) {
         var w = canvas.width;
         var h = canvas.height;
         var img = new Image();
@@ -162,13 +213,22 @@ function pixelizeImage() {
         var pixelArray = ctx.getImageData(0, 0, w, h).data;
         var sampleSize = 8;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var pixelizedArray = [];
         for (var y = 0; y < h; y += sampleSize) {
             for (var x = 0; x < w; x += sampleSize) {
-                var c = cellAverage(pixelArray, x, y, w, sampleSize) / 150;
-                ctx.fillStyle = ("rgba(" + 0 + "," + 0 + "," + 0 + "," + c + ")");
+                var c = cellAverage(pixelArray, x, y, w, sampleSize);
+                ctx.fillStyle = ("rgba(" + 0 + "," + 0 + "," + 0 + "," + c / 200 + ")");
                 ctx.fillRect(x, y, sampleSize, sampleSize);
+                pixelizedArray[x + 28 * y] = c;
             }
         }
+        pixelizedArray.forEach(function (e) {
+            console.log(e);
+        });
+        pixArrays[sampleCount] = pixelizedArray;
+        sampleCount++;
+        pixelizeButton.innerHTML = "Add Sample:   " + sampleCount;
+        clearOnTouch = true;
     }
     function cellAverage(arr, x1, y1, w, sampleSize) {
         var x2 = x1 + sampleSize;
