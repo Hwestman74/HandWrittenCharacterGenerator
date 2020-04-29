@@ -12,6 +12,7 @@ let videoButton: HTMLButtonElement;
 let MIME_TYPE = "image/png";
 let canvas:HTMLCanvasElement;
 let video:HTMLVideoElement;
+let videoDiv:HTMLDivElement;
 let h1:HTMLElement;
 let  buttonDiv:HTMLDivElement;
 let charInput: HTMLInputElement;
@@ -51,7 +52,7 @@ function createCanvas() {
     canvas.addEventListener('touchmove', draw);
     canvas.addEventListener('mouseleave', finishPosition);
 
-    video?.remove();
+    videoDiv?.remove();
     
     document.body.insertBefore(canvas,buttonDiv);
     canvas.height = 224;
@@ -65,7 +66,15 @@ function createCanvas() {
 
 //
 function startVideo(){
+
+    videoDiv = document.createElement('div');
+    videoDiv.style.width = canvas.width.toString();
+    videoDiv.style.height = canvas.height.toString();
+
+    videoDiv.id = "videoDiv";
     video = document.createElement('video');
+    videoDiv.appendChild(video);
+    
     var constraints = { audio: false, video: { width: canvas.width, height: canvas.height } }; 
 
     navigator.mediaDevices.getUserMedia(constraints)
@@ -77,7 +86,7 @@ function startVideo(){
             
             canvas?.remove();
             
-            document.body.insertBefore(video,buttonDiv);
+            document.body.insertBefore(videoDiv,buttonDiv);
             if(videoButton)
                 videoButton.innerHTML = "Draw character";
             
@@ -87,6 +96,10 @@ function startVideo(){
             videoButton.addEventListener('click',createCanvas);
         })
         .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+}
+
+function stopVideo(){
+    
 }
 
 function initializeApp(){

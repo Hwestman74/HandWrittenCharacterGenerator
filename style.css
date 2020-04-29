@@ -18,10 +18,14 @@ body {
     background-color: white;
 }
 
-#video {
-    display: block;
-    width: auto;
-    margin: 0 auto; 
+#videoDiv {
+    border:3px solid black;
+
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    margin-left:32%;
+    margin-right:32%;
 } 
 
 .buttonDiv {
