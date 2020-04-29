@@ -24,8 +24,8 @@ body {
     border-radius: 6px;
     display: flex;
     justify-content: center;
-    margin-left:32%;
-    margin-right:32%;
+    /* margin-left:32%;
+    margin-right:32%; */
 } 
 
 .buttonDiv {
