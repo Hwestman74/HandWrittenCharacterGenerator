@@ -18,15 +18,28 @@ body {
     background-color: white;
 }
 
-.Buttons {
+#video {
+    display: block;
+    width: auto;
+    margin: 0 auto; 
+} 
+
+.buttonDiv {
     display: flex;
     flex-direction: column;
     margin: auto;
+    /* border: 3px solid lightgray;
+    border-radius: 6px;
+    background-color: lightblue; */
+    margin-left: 32%;
+    margin-right: 32%;
 }
 
-#clearButton,#saveButton,#pixelizeButton {
-    margin-left: 30%;
-    margin-right: 30%;
+
+
+#clearButton,#saveButton,#pixelizeButton,#videoButton {
+    margin-left: 15%;
+    margin-right: 15%;
     font-size: 24px;
     margin-bottom: 5px;
     background-color: aliceblue;
@@ -46,4 +59,5 @@ h1 {
     margin:auto;
     background-color: rgba(235, 184, 184,0.6);
     border-radius: 6px;
+    
 }

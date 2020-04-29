@@ -5,10 +5,12 @@
 // This is useful for multiplication and
 // dots over i.
 var clearButton;
-var saveButton;
 var pixelizeButton;
+var saveButton;
+var videoButton;
 var MIME_TYPE = "image/png";
 var canvas;
+var video;
 var h1;
 var buttonDiv;
 var charInput;
@@ -27,8 +29,7 @@ var screenHeight;
 window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyDown);
 window.addEventListener('load', initializeApp);
-function createCanvasPage() {
-    h1 = document.createElement('h1');
+function createCanvas() {
     canvas = document.createElement('canvas');
     canvas.id = "canvas";
     ctx = canvas.getContext("2d");
@@ -36,8 +37,49 @@ function createCanvasPage() {
     if (el instanceof HTMLInputElement) {
         charInput = el;
     }
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchstart', startPosition);
+    canvas.addEventListener('touchend', finishPosition);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('mouseleave', finishPosition);
+    video === null || video === void 0 ? void 0 : video.remove();
+    document.body.insertBefore(canvas, buttonDiv);
+    canvas.height = 224;
+    canvas.width = 224;
+    videoButton === null || videoButton === void 0 ? void 0 : videoButton.removeEventListener('click', createCanvas);
+    videoButton === null || videoButton === void 0 ? void 0 : videoButton.addEventListener('click', startVideo);
+    if (videoButton)
+        videoButton.innerHTML = "Capture Image";
+}
+//
+function startVideo() {
+    video = document.createElement('video');
+    var constraints = { audio: false, video: { width: canvas.width, height: canvas.height } };
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(function (mediaStream) {
+        video.srcObject = mediaStream;
+        video.onloadedmetadata = function (e) {
+            video.play();
+        };
+        canvas === null || canvas === void 0 ? void 0 : canvas.remove();
+        document.body.insertBefore(video, buttonDiv);
+        if (videoButton)
+            videoButton.innerHTML = "Draw character";
+        videoButton.removeEventListener('click', startVideo);
+        videoButton.addEventListener('click', createCanvas);
+    })
+        .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+}
+function initializeApp() {
+    screenHeight = window.innerHeight;
+    screenWidth = window.innerWidth;
+    h1 = document.createElement('h1');
+    h1.innerHTML = "Draw and Download";
+    createCanvas();
     buttonDiv = document.createElement('div');
-    buttonDiv.className = "Buttons";
+    buttonDiv.className = "buttonDiv";
     clearButton = document.createElement('button');
     clearButton.id = "clearButton";
     clearButton.innerHTML = "Clear Canvas";
@@ -47,6 +89,9 @@ function createCanvasPage() {
     saveButton = document.createElement('button');
     saveButton.innerHTML = "Download Set";
     saveButton.id = "saveButton";
+    videoButton = document.createElement('button');
+    videoButton.innerHTML = "Capture Image";
+    videoButton.id = "videoButton";
     charInput = document.createElement('input');
     charInput.id = "characterInput";
     charInput.placeholder = "Enter character name...";
@@ -55,38 +100,18 @@ function createCanvasPage() {
     buttonDiv.appendChild(clearButton);
     buttonDiv.appendChild(pixelizeButton);
     buttonDiv.appendChild(saveButton);
+    buttonDiv.appendChild(videoButton);
     buttonDiv.appendChild(charInput);
     document.body.appendChild(h1);
     document.body.appendChild(canvas);
     document.body.appendChild(buttonDiv);
-}
-function initializeApp() {
-    screenHeight = window.innerHeight;
-    screenWidth = window.innerWidth;
-    createCanvasPage();
-    // canvas = <HTMLCanvasElement>document.getElementById("canvas");
-    // ctx = canvas.getContext("2d");
-    // let el = document.getElementById("characterInput");
-    // if(el instanceof HTMLInputElement){
-    //     charInput = el;
-    // }
-    // clearButton = <HTMLButtonElement>document.getElementById("clearButton");
-    // saveButton = <HTMLButtonElement>document.getElementById("saveButton");
-    // pixelizeButton = <HTMLButtonElement>document.getElementById("pixelizeButton");
-    //Resizing
     updateSize(canvas);
     //Eventlisteners
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', finishPosition);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', startPosition);
-    canvas.addEventListener('touchend', finishPosition);
-    canvas.addEventListener('touchmove', draw);
-    canvas.addEventListener('mouseleave', finishPosition);
     clearButton.addEventListener('click', clearCanvas);
     saveButton.addEventListener('click', saveImage);
     pixelizeButton.addEventListener('click', addSample);
     charInput.addEventListener('change', onChangeChar);
+    videoButton.addEventListener('click', startVideo);
 }
 window.addEventListener('resize', resize);
 function onChangeChar() {
@@ -222,9 +247,6 @@ function addSample() {
                 pixelizedArray[x + 28 * y] = c;
             }
         }
-        pixelizedArray.forEach(function (e) {
-            console.log(e);
-        });
         pixArrays[sampleCount] = pixelizedArray;
         sampleCount++;
         pixelizeButton.innerHTML = "Add Sample:   " + sampleCount;
